@@ -12,8 +12,11 @@ import java.util.List;
 /**
  * 背包算法，吴浩鹏提供
  */
+// 默认 plus_Work 为100，先提前把容量算到plus_Work往前
 public class BagUtils {
-    public static void getBastIntChoose(int[] deal_Array, int sum) {
+    public static void getBastIntChoose(int[] deal_Array, int _sum) {
+        int plus_Work = 100;
+        int sum = _sum + plus_Work;
         int dp[] = new int[sum+1];
         char state[][] = new char[deal_Array.length][sum+1]; /* 记录路径的二维数组 */
         int i, j;
@@ -29,7 +32,20 @@ public class BagUtils {
             }
         }
         i = deal_Array.length; // 第几个商品
-        j = M;// 当前背包容量
+
+        // 确定背包的容量，从 _sum 开始一直到 _sum + plus_Work
+        int capacity = _sum;
+        while( dp[capacity] < _sum && capacity <= _sum + plus_Work){
+            capacity++;
+        }
+        // 判断是哪个原因跳出while循环，如果不是因为第一个，则说明plus_Work不够大，在此输出提示信息
+        if(dp[capacity] < _sum){
+            System.out.println("警告：plus_Work不够大，选择出的发票总金额仍小于报销金额！请增大plus_Work重试。建议100起步。");
+            // capacity已经是_sum + plus_Work + 1将capacity回退为_sum + plus_Work让程序继续运行
+            capacity -= 1;
+        }
+
+        j = capacity;// 当前背包容量
         System.out.println("============================");
         int all = 0;
         String str = "";
@@ -44,6 +60,50 @@ public class BagUtils {
         System.out.println(str);
     }
 
+    // 利用重栽函数模拟java的参数设置默认值功能
+    public static void getBastIntChoose(int[] deal_Array, int _sum, int plus_Work) {
+        int sum = _sum + plus_Work;
+        int dp[] = new int[sum+1];
+        char state[][] = new char[deal_Array.length][sum+1]; /* 记录路径的二维数组 */
+        int i, j;
+        int M = sum; // 待查找近似值
+        /* 01背包 */
+        for (i = 0; i < deal_Array.length; ++i) {
+            for (j = M; j >= deal_Array[i]; --j) {
+                int tmp = dp[j - deal_Array[i]] + deal_Array[i];
+                if (tmp > dp[j]) {
+                    dp[j] = tmp;
+                    state[i][j] = 1;
+                }
+            }
+        }
+        i = deal_Array.length; // 第几个商品
+        // 确定背包的容量，从 _sum 开始一直到 _sum + plus_Work
+        int capacity = _sum;
+        while( dp[capacity] < _sum && capacity <= _sum + plus_Work){
+            capacity++;
+        }
+        // 判断是哪个原因跳出while循环，如果不是因为第一个，则说明plus_Work不够大，在此输出提示信息
+        if(dp[capacity] < _sum){
+            System.out.println("警告：plus_Work不够大，选择出的发票总金额仍小于报销金额！请增大plus_Work重试。建议100起步。");
+            // capacity已经是_sum + plus_Work + 1将capacity回退为_sum + plus_Work让程序继续运行
+            capacity -= 1;
+        }
+
+        j = capacity;// 当前背包容量
+        System.out.println("============================");
+        int all = 0;
+        String str = "";
+        while ((--i) >= 0) {
+            if (state[i][j] == 1) {
+                all+=deal_Array[i];
+                str += deal_Array[i]+"+";
+                j -= deal_Array[i];
+            }
+        }
+        str = str.substring(0,str.length()-1)+"="+all;
+        System.out.println(str);
+    }
 
     /*
     public static List<Invoice> getBastInvoiceChose(List<Invoice> invoices, double bxed) {
@@ -134,8 +194,8 @@ public class BagUtils {
      */
 
     public static void test3(){
-        int[] ints = {3,4,6,10,4,8,9};
-        getBastIntChoose(ints,15);
+        int[] ints = {4,6,10,8,20,30};
+        getBastIntChoose(ints,57);
     }
 
     public static void main(String[] args) {
@@ -143,6 +203,3 @@ public class BagUtils {
         test3();
     }
 }
-
-
-
