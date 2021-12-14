@@ -12,8 +12,9 @@ import java.util.List;
 /**
  * 背包算法，吴浩鹏提供
  */
-// 默认 plus_Work 为100，先提前把容量算到plus_Work往前
+
 public class BagUtils {
+    // 默认 plus_Work 为100，先提前把容量算到plus_Work往前
     public static void getBastIntChoose(int[] deal_Array, int _sum) {
         int plus_Work = 100;
         int sum = _sum + plus_Work;
@@ -60,7 +61,7 @@ public class BagUtils {
         System.out.println(str);
     }
 
-    // 利用重栽函数模拟java的参数设置默认值功能
+    // 用重载函数提供另外一个可以指定plus_Work的函数
     public static void getBastIntChoose(int[] deal_Array, int _sum, int plus_Work) {
         int sum = _sum + plus_Work;
         int dp[] = new int[sum+1];
