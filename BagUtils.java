@@ -10,7 +10,7 @@ import java.util.List;
  */
 
 /**
- * 背包算法，吴浩鹏提供
+ * 背包算法
  */
 
 public class BagUtils {
